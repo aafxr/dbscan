@@ -81,11 +81,14 @@ export class DBSCAN {
     }
 
     const groups = Object.groupBy(this.points, (p) => p.cluster);
+
+    if(!groups[NOISE]) groups[NOISE] = []
+    
     Object.keys(groups)
       .forEach(key => {
-        if(groups[key].length === 1){
-          groups[NOISE].push(groups[key])
-          groups[key][0].cluster = NOISE
+        if(key !== NOISE && groups[key] && groups[key].length < min_points){
+          groups[NOISE].push(...groups[key])
+          groups[key].forEach(p => p.cluster = NOISE)
           delete groups[key]
         }
       })

@@ -19,7 +19,7 @@ const canvas = document.querySelector("#canvas");
 
 
 
-const points = generatePoints(1200, 750, 480)
+const points = generatePoints(350, 750, 480)
 
 const cnv = new Canvas("#canvas", "#111", "#7a015e");
 
@@ -28,7 +28,7 @@ const cnv = new Canvas("#canvas", "#111", "#7a015e");
 // }
 
 const dbscan = new DBSCAN(points);
-const clusters = dbscan.dbscan(20, 5);
+const clusters = dbscan.dbscan(45, 3);
 
 
 
