@@ -4,7 +4,20 @@ import { kMeans } from './k-means/k-meas';
 import { points } from './points';
 import './style.css';
 
-const colors = ['red', 'green', 'blue', 'yellow', 'orange', 'purple', 'pink'];
+const colors = [
+  'red',
+  'green',
+  'blue',
+  'yellow',
+  'orange',
+  'purple',
+  'pink',
+  'lightseagreen',
+  'teal',
+  'goldenrod',
+  'blueviolet',
+  'darkred',
+];
 
 const app = document.querySelector('#app');
 

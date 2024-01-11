@@ -49,15 +49,7 @@ export class DBSCAN {
       let index = 0;
       let seed_point = seed[index];
       while (seed_point) {
-        // if(seed_point.cluster === NOISE) {
-        //   seed_point.cluster = c
-        //   index++;
-        //   seed_point = seed[index];
-        //   continue
-        // }
         if (seed_point.cluster !== undefined && seed_point.cluster !== NOISE) {
-          // this.points
-          //   .forEach(p => p.cluster === seed_point.cluster &&  (p.cluster = c))
           seed_point.cluster = c;
           index++;
           seed_point = seed[index];
