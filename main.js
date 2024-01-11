@@ -1,64 +1,91 @@
-import chroma from "chroma-js";
-import { Canvas } from "./classes/Canvas";
-import { DBSCAN } from "./classes/DBSCAN";
-import { points } from "./points";
-import "./style.css";
-import generatePoints from "./utils/generatePoints";
+import { Canvas } from './classes/Canvas';
+import { DBSCAN } from './classes/DBSCAN';
+import { kMeans } from './k-means/k-meas';
+import { points } from './points';
+import './style.css';
 
-const app = document.querySelector("#app");
-/**@type{HTMLCanvasElement} */
-const canvas = document.querySelector("#canvas");
+const colors = ['red', 'green', 'blue', 'yellow', 'orange', 'purple', 'pink'];
 
-// const data = generatePoints(400, 750,480)
-// app.innerHTML += `
-// <pre>
-// ${data}
-// </pre>
-// `
+const app = document.querySelector('#app');
 
+/**
+ *
+ *
+ *
+ *
+ *
+ */
 
+/**@type{HTMLInputElement} */
+const dbscan_range = document.querySelector('#dbscan-range');
 
-
-// const points = generatePoints(400, 750, 480)
-
-const cnv = new Canvas("#canvas", "#111", "#7a015e");
-
-// for (const p of points) {
-//   cnv.drawPoint(p.x, p.y, 4, "#ccc");
-// }
-
+const dbscan_cnv = new Canvas('#dbscan-canvas', '#111', '#7a015e');
 const dbscan = new DBSCAN(points);
-const clusters = dbscan.dbscan(120, 7);
 
+function drawDBSCAN(eps, dencity) {
+  points.forEach((p) => delete p.cluster);
 
-
-// console.log(dbscan);
-console.log(clusters);
-
-const colors = ['red', 'green', 'blue', 'yellow', 'orange', 'purple', 'pink']// chroma.scale().colors(clusters.length);
-// // console.log(colors);
-
-cnv.clearCanvas()
-for (let i = 0; i < clusters.length; i++){
-  const cluster = clusters[i]
-  for (const p of cluster) {
-    cnv.drawPoint(p.x, p.y, 2, p.cluster === 'noise' ? '#333' : colors[i % colors.length]);
+  const clusters = dbscan.dbscan(eps, dencity);
+  dbscan_cnv.clearCanvas();
+  for (let i = 0; i < clusters.length; i++) {
+    const cluster = clusters[i];
+    for (const p of cluster) {
+      dbscan_cnv.drawPoint(
+        p.x,
+        p.y,
+        2,
+        p.cluster === 'noise' ? '#333' : colors[i % colors.length]
+      );
+    }
   }
 }
 
-// function draw(cnv, clusters = [], colors = [], idx = 0, delay = 1000) {
-//   const cluster = clusters[idx];
-//   const color = colors[idx];
+const db_c = +dbscan_range.value;
+const range = 200;
+drawDBSCAN(range, db_c);
 
-//   for (const p of cluster) {
-//     cnv.drawPoint(p.x, p.y, 4, p.cluster === 'noise' ? '#333':color);
-//   }
+dbscan_range.addEventListener('change', (e) => {
+  const db_c = +e.target.value;
+  drawDBSCAN(range, db_c);
+});
 
-//   if (clusters[idx + 1]) {
-//     setTimeout(() => draw(cnv, clusters, colors, idx + 1, delay) , delay);
-//   }
+/**
+ *
+ *
+ *
+ *
+ *
+ */
 
-//   // console.log(color);
-// }
+/**@type{HTMLInputElement} */
+const k_range = document.querySelector('#k-range');
 
-// draw(cnv, clusters, colors,  0, 0);
+const k_cnv = new Canvas('#k-canvas', '#111', '#7a015e');
+
+function drawKMeans(points, clustersCount, maxIterations, eps) {
+  const _points = [...points];
+  kMeans(_points, clustersCount, maxIterations, eps);
+
+  k_cnv.clearCanvas();
+  for (const p of _points) {
+    k_cnv.drawPoint(
+      p[0],
+      p[1],
+      2,
+      ~p.clusterIndex ? colors[p.clusterIndex % colors.length] : '#333'
+    );
+  }
+
+  // console.log(Object.groupBy(_points, (p) => p.clusterIndex));
+}
+
+const kMeans_points = points.map(({ x, y }) => [x, y]);
+const k_c = +k_range.value;
+
+drawKMeans(kMeans_points, k_c, kMeans_points.length * 2, 0.0001);
+
+k_range.addEventListener('change', (e) => {
+  const k_c = +e.target.value;
+
+  drawKMeans(kMeans_points, k_c, kMeans_points.length * 2, 0.01);
+});

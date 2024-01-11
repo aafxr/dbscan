@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -8,7 +8,37 @@
   </head>
   <body>
     <div id="app">
-      <canvas id="canvas" width="750" height="480"></canvas>
+      <section class="dbscan">
+        <h2>dbscan</h2>
+        <div class="vac">
+          <label for="dbscan-range">dencity</label>
+          <input
+            id="dbscan-range"
+            type="range"
+            min="1"
+            max="30"
+            step="1"
+            value="3"
+          />
+        </div>
+        <canvas id="dbscan-canvas" width="750" height="480"></canvas>
+      </section>
+
+      <section class="k-means">
+        <h2>k-means</h2>
+        <div class="vac">
+          <label for="k-range">clusters</label>
+          <input
+            id="k-range"
+            type="range"
+            min="1"
+            max="30"
+            step="1"
+            value="3"
+          />
+        </div>
+        <canvas id="k-canvas" width="750" height="480"></canvas>
+      </section>
     </div>
     <script type="module" src="/main.js"></script>
   </body>
