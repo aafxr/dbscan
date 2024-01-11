@@ -15,12 +15,15 @@ function initRandomCentroids(data, k) {
     const point = [...data[index]];
     point.clusterIndex = i + 1;
     centroids.push(point);
-    // data.splice(index, 1);
   }
   return centroids;
 }
 
 // Функция обновления центроидов и принадлежности объектов к кластерам
+/**
+ * поиск ближайшего кластера .
+ * метод возвращает метку ближайшего кластера
+ */
 function updateCluster(centroids, point) {
   let closestCentroidIndex = -1;
   let minDistance = Number.MAX_VALUE;
@@ -61,9 +64,12 @@ export function kMeans(data, k, maxIterations, epsilon) {
     iterations += 1;
     changes = 0;
     for (const datum of data) {
+      /** получение метки ближайшего кластера, и помечаем точку меткой */
       const cidx = updateCluster(initCentroids, datum);
-      if (cidx !== datum.clusterIndex) changes += 1;
-      datum.clusterIndex = cidx;
+      if (cidx !== datum.clusterIndex) {
+        changes += 1;
+        datum.clusterIndex = cidx;
+      }
     }
 
     const newCentroids = getNewCentroids(data);
@@ -71,11 +77,17 @@ export function kMeans(data, k, maxIterations, epsilon) {
     initCentroids = newCentroids;
   }
 }
-
-function converged(data, changes, epsilon) {
-  return changes < epsilon * data.length;
+/** если количество изменений метки кластера точек меньше  __epsilon * points.length__
+ * значит алгоритм достиг допустимого отклонения
+ * и можнл завершать расчет не дожидаясь максимального числа итерааций
+ */
+function converged(points, changes, epsilon) {
+  return changes < epsilon * points.length;
 }
 
+/**
+ * вычисление координат центров кластеров
+ */
 function getNewCentroids(data) {
   const groupse = Object.groupBy(data, (datum) => datum.clusterIndex);
 

@@ -58,7 +58,7 @@ function drawDBSCAN(eps, dencity) {
 
 const db_c = +dbscan_range.value;
 db_num.innerText = db_c;
-const range = 100;
+const range = 30;
 drawDBSCAN(range, db_c);
 
 dbscan_range.addEventListener('change', (e) => {

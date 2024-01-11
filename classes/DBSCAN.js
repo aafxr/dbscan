@@ -8,6 +8,7 @@ export class DBSCAN {
   constructor(points) {
     this.points = points;
 
+    // расчет растояний для всех точек
     for (let i = 0; i < this.points.length; i++) {
       for (let j = i; j < this.points.length; j++) {
         const p1 = points[i];
@@ -31,23 +32,37 @@ export class DBSCAN {
     return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
   }
 
+  _squareDistans(x1, y1, x2, y2) {
+    return Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2);
+  }
+
+  /**
+   * метод объеденяет точки в группы основываясь на парамеирах плотности
+   * @param {number} eps отклонение (растояние между точками)
+   * @param {number} min_points число точек, которые должны быть в диапазоне eps
+   * @returns
+   */
   dbscan(eps, min_points) {
-    let c = 0;
+    let c = 0; //метка кластера
     for (const point of this.points) {
       if (point.cluster === NOISE) continue;
 
+      // список всех соседей к данной точки
       const neighbors = this.rangeQuery(point, eps);
       if (neighbors.length < min_points) {
         point.cluster = NOISE;
         continue;
       }
 
+      // если точка удовлетворяет условиям min_points, помечаем ее меткой кластера
+      // и далее проверяем ее соседей по той жже схеме
       c += 1;
       point.cluster = c;
 
       const seed = neighbors;
       let index = 0;
       let seed_point = seed[index];
+      // проверка соседей точки
       while (seed_point) {
         if (seed_point.cluster !== undefined && seed_point.cluster !== NOISE) {
           seed_point.cluster = c;
@@ -58,6 +73,8 @@ export class DBSCAN {
 
         seed_point.cluster = c;
         let neighbors_2 = this.rangeQuery(seed_point, eps);
+        //если соседняя точка удовлетворяет условиям плотности
+        //добавляем ее новых соседей в конец маассива seed
         if (neighbors_2.length >= min_points) {
           neighbors_2 = neighbors_2.filter((nb) => !seed.includes(nb));
           seed.push(...neighbors_2);
@@ -84,41 +101,16 @@ export class DBSCAN {
   }
 
   /**
+   * поиск всех соседей точки, которые удовлетворяют условиям плотности
    * @returns {Array}
    */
   rangeQuery(point, eps) {
     const neighbors = [];
+    const _eps = eps * eps;
     for (const p2 of this.points) {
-      // if (p2.cluster && p2.cluster !== NOISE) continue;
-
-      const dist = this.distance[point.id + ':' + p2.id];
-      if (dist && dist < eps) neighbors.push(p2);
+      const dist = this._squareDistans(point.x, point.y, p2.x, p2.y);
+      if (dist && dist < _eps) neighbors.push(p2);
     }
     return neighbors;
   }
 }
-
-// if (seed_point.cluster === NOISE) {
-//   seed_point.cluster = c;
-//   this.rangeQuery(seed_point, eps).forEach((p) => (p.cluster = c));
-
-// } else if (seed_point.cluster !== undefined) {
-//   this.points.forEach((p) => {
-//     if (p.cluster === seed_point.cluster) {
-//       p.cluster = seed_point.cluster;
-//       this.rangeQuery(p, eps).forEach((p) => (p.cluster = c));
-//     }
-//   });
-
-// } else {
-//   seed_point.cluster = c;
-//   let neighbors_2 = this.rangeQuery(seed_point, eps);
-
-//   if (neighbors_2.length > min_points) {
-//     neighbors_2 = neighbors_2.filter((nb) => !seed.includes(nb));
-//     neighbors.forEach((p) => (p.cluster = c))
-//     seed.push(...neighbors_2);
-//   } else if (seed_point.cluster === undefined) {
-//     seed_point.cluster = NOISE;
-//   }
-// }
