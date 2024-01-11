@@ -42,3 +42,19 @@
 label {
   margin: 0 1rem;
 }
+
+input {
+  position: relative;
+}
+
+input::after {
+  content: attr('data-num');
+  position: absolute;
+  left: 110%;
+  top: 0;
+}
+
+.number {
+  margin-left: 1rem;
+  font-weight: 600;
+}

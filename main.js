@@ -19,6 +19,9 @@ const app = document.querySelector('#app');
 /**@type{HTMLInputElement} */
 const dbscan_range = document.querySelector('#dbscan-range');
 
+/**@type{HTMLSpanElement} */
+const db_num = document.querySelector('.number.db-num');
+
 const dbscan_cnv = new Canvas('#dbscan-canvas', '#111', '#7a015e');
 const dbscan = new DBSCAN(points);
 
@@ -41,11 +44,13 @@ function drawDBSCAN(eps, dencity) {
 }
 
 const db_c = +dbscan_range.value;
-const range = 200;
+db_num.innerText = db_c;
+const range = 100;
 drawDBSCAN(range, db_c);
 
 dbscan_range.addEventListener('change', (e) => {
   const db_c = +e.target.value;
+  db_num.innerText = db_c;
   drawDBSCAN(range, db_c);
 });
 
@@ -59,6 +64,8 @@ dbscan_range.addEventListener('change', (e) => {
 
 /**@type{HTMLInputElement} */
 const k_range = document.querySelector('#k-range');
+/**@type{HTMLSpanElement} */
+const k_num = document.querySelector('.number.k-num');
 
 const k_cnv = new Canvas('#k-canvas', '#111', '#7a015e');
 
@@ -81,11 +88,13 @@ function drawKMeans(points, clustersCount, maxIterations, eps) {
 
 const kMeans_points = points.map(({ x, y }) => [x, y]);
 const k_c = +k_range.value;
+k_num.innerText = k_c;
 
 drawKMeans(kMeans_points, k_c, kMeans_points.length * 2, 0.0001);
 
 k_range.addEventListener('change', (e) => {
   const k_c = +e.target.value;
+  k_num.innerText = k_c;
 
   drawKMeans(kMeans_points, k_c, kMeans_points.length * 2, 0.01);
 });
