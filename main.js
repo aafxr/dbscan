@@ -1,7 +1,8 @@
 import { Canvas } from './classes/Canvas';
 import { DBSCAN } from './classes/DBSCAN';
 import { kMeans } from './k-means/k-meas';
-import { points } from './points';
+// import { points } from './points';
+import generatePoints from './utils/generatePoints';
 import './style.css';
 
 const colors = [
@@ -14,12 +15,12 @@ const colors = [
   'pink',
   'lightseagreen',
   'teal',
-  'goldenrod',
-  'blueviolet',
   'darkred',
 ];
 
 const app = document.querySelector('#app');
+
+const points = generatePoints(3000, 750, 480);
 
 /**
  *
@@ -58,7 +59,7 @@ function drawDBSCAN(eps, dencity) {
 
 const db_c = +dbscan_range.value;
 db_num.innerText = db_c;
-const range = 30;
+const range = 20;
 drawDBSCAN(range, db_c);
 
 dbscan_range.addEventListener('change', (e) => {

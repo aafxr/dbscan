@@ -9,23 +9,23 @@ export class DBSCAN {
     this.points = points;
 
     // расчет растояний для всех точек
-    for (let i = 0; i < this.points.length; i++) {
-      for (let j = i; j < this.points.length; j++) {
-        const p1 = points[i];
-        const p2 = points[j];
+    // for (let i = 0; i < this.points.length; i++) {
+    //   for (let j = i; j < this.points.length; j++) {
+    //     const p1 = points[i];
+    //     const p2 = points[j];
 
-        if (this.distance[p1.id + ':' + p2.id]) continue;
+    //     if (this.distance[p1.id + ':' + p2.id]) continue;
 
-        if (i === j) {
-          this.distance[p1.id + ':' + p2.id] = Infinity;
-          continue;
-        }
+    //     if (i === j) {
+    //       this.distance[p1.id + ':' + p2.id] = Infinity;
+    //       continue;
+    //     }
 
-        const dist = this._distans(p1.x, p1.y, p2.x, p2.y);
-        this.distance[p1.id + ':' + p2.id] = dist;
-        this.distance[p2.id + ':' + p1.id] = dist;
-      }
-    }
+    //     const dist = this._distans(p1.x, p1.y, p2.x, p2.y);
+    //     this.distance[p1.id + ':' + p2.id] = dist;
+    //     this.distance[p2.id + ':' + p1.id] = dist;
+    //   }
+    // }
   }
 
   _distans(x1, y1, x2, y2) {
